@@ -42,14 +42,15 @@ function get_twitter_token(){
 	return $bearer_token->{'access_token'};
 }
 
-function twitter_search($token, $query, $result_type='mixed', $count='8'){
+function twitter_search($token, $query){
 	$url = "https://api.twitter.com/1.1/search/tweets.json";
 	$q = urlencode(trim($query));
 	$formed_url ='?q='.$q;
-	//limit search to lang English and US lower 48 geocode
+	//limit search to lang English, US lower 48 geocode and exclude RTs
 	$formed_url = $formed_url.'+exclude:retweets&lang=en&geocode=39.8,-95.583068847656,2500km';
-	if($result_type!='mixed'){$formed_url = $formed_url.'&result_type='.$result_type;}
-	if($count!='15'){$formed_url = $formed_url.'&count='.$count;}
+	//search result_type mixed and count 8
+	$formed_url = $formed_url.'&result_type=mixed&count=8';
+	//include entities
 	$formed_url = $formed_url.'&include_entities=true'; 
 	$headers = array( 
 		"GET /1.1/search/tweets.json".$formed_url." HTTP/1.1", 
