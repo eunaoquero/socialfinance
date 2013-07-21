@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<div class="navbar navbar-static-top">
+<div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -37,12 +37,18 @@
 </div> <!-- navbar -->
 
 <div class="container">
-	<div class="row-fluid">
+	<div class="row-fluid" id="firstRow">
     	<div class="span12"></div>
     </div>
+    
+    <div class="row-fluid">
+    	<div class="span12" id="secondRow"></div>
+    </div>
+    
     <div class="row-fluid">
     	<div class="span12 offset2"><h3>Add to dashboard</h3></div>
     </div>
+    
 	<div class="row-fluid">
 		<div class="span8 offset2">
 	    <form class="well form-search" id="mainQuery">
@@ -52,20 +58,11 @@
         </div>
 	</div>
     
-<div class="row-fluid">
-    <div class="span4 offset2"> 
-      <h3 id="list">Twitter Results</h3>
-          <div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivTwitter"></div>
+    <div class="row-fluid" id="resultsDiv">
+	
     </div>
-      
-	<div class="span4"> 
-      <h3 id="list">Instagram Results</h3>
-          <div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivInsta"></div>
-    </div>
-</div>
 
 </div>
-
   
 </body>
 </html>
