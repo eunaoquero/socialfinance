@@ -10,6 +10,12 @@
 <!-- Twitter Bootstrap -->
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.2/flatly/bootstrap.min.css" rel="stylesheet">
+<!-- Additional CSS before responsive CSS kicks in -->
+<style type="text/css">
+    body {
+        padding-top: 80px;
+    }
+</style>
 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
 <!-- Query API functions -->
 <script src="js/queryAPI.js"></script>
@@ -17,6 +23,7 @@
 </head>
 
 <body>
+<div class="header">
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
@@ -35,25 +42,19 @@
 		</div> <!-- container -->
 	</div> <!-- navbar inner -->
 </div> <!-- navbar -->
+</div>
 
 <div class="container">
-	<div class="row-fluid" id="firstRow">
-    	<div class="span12"></div>
+	<div class="row-fluid">
+    	<div class="span9 offset2"><h3>Check your investments</h3></div>
     </div>
-    
-    <div class="row-fluid">
-    	<div class="span12" id="secondRow"></div>
-    </div>
-    
-    <div class="row-fluid">
-    	<div class="span12 offset2"><h3>Add to dashboard</h3></div>
-    </div>
-    
+        
 	<div class="row-fluid">
 		<div class="span8 offset2">
 	    <form class="well form-search" id="mainQuery">
-	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Seach for symbol or name...">
-	      <button type="submit" class="btn" id="btnSearch">Go!</button>
+	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Search for stock symbol...">
+	      <button type="submit" class="btn btn-success" id="btnSearch"><i class="icon-search icon-white"></i> Go!</button>
+          <button type="reset" class="btn" id="btnReset">Reset</button>
 	    </form>
         </div>
 	</div>
@@ -62,7 +63,7 @@
 	
     </div>
 
-</div>
+</div> <!-- container -->
   
 </body>
 </html>
