@@ -18,7 +18,7 @@ $(document).ready(function(e) {
 	
 	//typeahead callback function
 	 YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
-		resultList.length = 0; //reset global typeahead array
+		resultList = []; //reset global typeahead array
 		$.each(data.ResultSet.Result, function (index, value) {
 			resultList.push(JSON.stringify({ name: value.name, value: value.symbol}));
     	});
@@ -28,19 +28,18 @@ $(document).ready(function(e) {
 	//main input typeahead function
 	$('#mainQueryInput').typeahead({
   		source: function (query, process) {
-			if (query.length > 0) {
-					$.ajax({ 
-							type: "GET",
-							url: "http://d.yimg.com/autoc.finance.yahoo.com/autoc",
-							data: {
-								query: query
-							}, 
-							dataType:"jsonp",
-							jsonpCallback: "YAHOO.Finance.SymbolSuggest.ssCallback",
-					});
-			};
+			$.ajax({ 
+				type: "GET",
+				url: "http://d.yimg.com/autoc.finance.yahoo.com/autoc",
+				data: {
+					query: query
+					}, 
+				dataType:"jsonp",
+				jsonpCallback: "YAHOO.Finance.SymbolSuggest.ssCallback",
+			});
 			return resultList;
 		},
+		minLength: 2,
 		matcher: function(item) {
         	return true
     	},
@@ -49,9 +48,6 @@ $(document).ready(function(e) {
 		},
 		highlighter: function (item) {
 			return JSON.parse(item).name;
-		},
-		sorter: function (items) {
-    		return items.sort();
 		}
 	});
 	
