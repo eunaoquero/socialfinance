@@ -23,7 +23,6 @@
 </head>
 
 <body>
-<div class="header">
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
@@ -35,14 +34,13 @@
            <a class="brand" href="../socialfinance">SocialFinance</a>
            <div class="nav-collapse collapse" id="main-menu">
             <ul class="nav" id="main-menu-left">
-              <li><a href="#">About</a></li>
+              <li><a href="#modalAbout" data-toggle="modal">About</a></li>
               <li><a href="#">Help</a></li>
             </ul>
             </div>
 		</div> <!-- container -->
 	</div> <!-- navbar inner -->
 </div> <!-- navbar -->
-</div>
 
 <div class="container">
 	<div class="row-fluid">
@@ -52,7 +50,7 @@
 	<div class="row-fluid">
 		<div class="span8 offset2">
 	    <form class="well form-search" id="mainQuery">
-	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Search for stock symbol...">
+	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Enter company name..." data-provide="typeahead">
 	      <button type="submit" class="btn btn-success" id="btnSearch"><i class="icon-search icon-white"></i> Go!</button>
           <button type="reset" class="btn" id="btnReset">Reset</button>
 	    </form>
@@ -64,6 +62,27 @@
     </div>
 
 </div> <!-- container -->
+
+<div id="modalAbout" class="modal hide fade">
+	<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h3>About</h3>
+  	</div>
+  	<div class="modal-body">
+    	<p><strong>SocialFinance</strong> is an MIST 7571 project for Summer 2013 by Team 4.</p>
+        <p>Team 4 is comprised of:
+        	<ul>
+            	<li>Davis Buckheister</li>
+            	<li>Brian Lord</li>
+                <li>Rodney Pacis</li>
+                <li>Rafael Silva</li>
+            </ul>
+        </p>
+  	</div>
+  	<div class="modal-footer">
+    	<a href="#" class="btn" data-dismiss="modal">Close</a>
+  	</div>
+</div> <!-- modalAbout -->
   
 </body>
 </html>

@@ -4,8 +4,58 @@ on document load as well as supporting functions
 that use the API proxy to retrieve the results
 */
 
+//Global YAHOO variable for cross-domain typeahead call
+var YAHOO = {
+		Finance: {
+     	SymbolSuggest: {}
+  	}
+};
+//Global variable for typeahead
+var resultList = [];
+
 //main js function
 $(document).ready(function(e) {
+	
+	//typeahead callback function
+	 YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
+		resultList.length = 0; //reset global typeahead array
+		$.each(data.ResultSet.Result, function (index, value) {
+			resultList.push(JSON.stringify({ name: value.name, value: value.symbol}));
+    	});
+		return resultList;
+    };
+	
+	//main input typeahead function
+	$('#mainQueryInput').typeahead({
+  		source: function (query, process) {
+			if (query.length > 0) {
+					$.ajax({ 
+							type: "GET",
+							url: "http://d.yimg.com/autoc.finance.yahoo.com/autoc",
+							data: {
+								query: query
+							}, 
+							dataType:"jsonp",
+							jsonpCallback: "YAHOO.Finance.SymbolSuggest.ssCallback",
+					});
+			};
+			return resultList;
+		},
+		matcher: function(item) {
+        	return true
+    	},
+		updater: function (item) {
+			return JSON.parse(item).value;
+		},
+		highlighter: function (item) {
+			return JSON.parse(item).name;
+		},
+		sorter: function (items) {
+    		return items.sort();
+		}
+	});
+	
+	//submit function
 	$('#mainQuery').submit(function(e) {
         console.log('Form is being submitted...');
 		var query_text = $('#mainQueryInput').val();
