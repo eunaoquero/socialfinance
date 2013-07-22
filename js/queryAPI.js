@@ -11,21 +11,21 @@ var YAHOO = {
   	}
 };
 //Global variable for typeahead
-var resultList = [];
+var resultListGlobal = [];
 
 //main js function
 $(document).ready(function(e) {
 	
 	//typeahead callback function
 	 YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
-		resultList = []; //reset global typeahead array
+		resultListGlobal = []; //reset global typeahead array
 		$.each(data.ResultSet.Result, function (index, value) {
-			resultList.push(JSON.stringify({ name: value.name, value: value.symbol}));
+			resultListGlobal.push(JSON.stringify({ name: value.name, value: value.symbol}));
     	});
-		return resultList;
+		return resultListGlobal;
     };
 	
-	//main input typeahead function
+	//input typeahead function
 	$('#mainQueryInput').typeahead({
   		source: function (query, process) {
 			$.ajax({ 
@@ -37,7 +37,7 @@ $(document).ready(function(e) {
 				dataType:"jsonp",
 				jsonpCallback: "YAHOO.Finance.SymbolSuggest.ssCallback",
 			});
-			return resultList;
+			return resultListGlobal; //global typeahead variable
 		},
 		minLength: 2,
 		matcher: function(item) {
@@ -57,10 +57,10 @@ $(document).ready(function(e) {
 		var query_text = $('#mainQueryInput').val();
 		$('#resultsDiv').html(''); //init results container div
 		
-		var resultDiv = '<div class="span4 offset2 fade" id="leftDiv"><h3 id="list">Twitter Results</h3><div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivTwitter"><img src="/socialfinance/images/ajax-loader.gif"/></div></div><div class="span4 fade" id="rightDiv"><h3 id="list">Instagram Results</h3><div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivInsta"></div></div>';
+		var resultDiv = '<div class="span4 offset2 fade" id="leftDiv"><h3 id="list"><img src="/socialfinance/images/twitter-icon.png"/>Twitter Results</h3><div class="well" style="padding: 8px 0;" id="resultListDivTwitter"><img style="display:block; margin:auto;" src="/socialfinance/images/ajax-loader.gif"/></div></div><div class="span4 fade" id="rightDiv"><h3 id="list"><img src="/socialfinance/images/tweetcloud-icon.png"/>Tweet Cloud</h3><div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivInsta"></div></div>';
 		
 		//empty search alert message
-		var queryTextEmpty = '<div class="alert alert-error span4 offset4 fade" id="emptyAlert">Please enter stock symbol <button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+		var queryTextEmpty = '<div class="alert alert-error span4 offset4 fade" id="emptyAlert">Please enter a stock symbol <button type="button" class="close" data-dismiss="alert">&times;</button></div>';
 		
 		//show container div
 		$('#resultsDiv').html(resultDiv);
@@ -93,7 +93,7 @@ $(document).ready(function(e) {
   		});
 	});
 	
-});
+}); //end document ready
 
 //queries the Twitter API through the PHP proxy
 function queryTwitterAPI(query_text){
@@ -110,20 +110,24 @@ function queryTwitterAPI(query_text){
 	//twitter api success callback
 	function processResults(data){
 		console.log('Processing results...');
-		var resultLimit = 5;
-		var tweetDate;
-		listHTML = '<ul class="nav nav-list" id="resultList">';
-		listHTML += '<li class="nav-header">Related Tweets</li>';
-
-		$.each(data.statuses, function(result, tweet) {
-			if (result < 5) {
-				tweetDate = new Date(tweet.created_at);
-				listHTML += '<li><a href="#">' + tweet.text + ' - <em>' + tweetDate.toLocaleString() + '</em></a></li>';
-			}
-		});
-		
-		listHTML += '</ul>';	
-		$('#resultListDivTwitter').html(listHTML); //show results
+		if (!jQuery.isEmptyObject(data)){
+			var resultLimit = 5;
+			var tweetDate;
+			listHTML = '<ul class="nav nav-list" id="resultList">';
+			listHTML += '<li class="nav-header">'+ query_text +' - Related Tweets</li>';
+	
+			$.each(data.statuses, function(result, tweet) {
+				if (result < 5) {
+					tweetDate = new Date(tweet.created_at);
+					listHTML += '<li><a href="#"></a><p>' + urlify(tweet.text) + ' <span class="muted"><em>' + tweetDate.toLocaleString() + '</em></span></p></li>';
+				}
+			});
+			
+			listHTML += '</ul>';	
+			$('#resultListDivTwitter').html(listHTML); //show results
+		} else { //no tweets found
+			$('#resultListDivTwitter').html('No related tweets found');
+		}
 	}
 	
 	//twitter api error callback
@@ -131,4 +135,12 @@ function queryTwitterAPI(query_text){
 		console.log('Error connecting to twitter API!');	
 	}
 	
+} //queryTwitterAPI
+
+//detects links in tweet text using regex
+function urlify(text) {
+    var urlRegex = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/;
+ 	 return text.replace(urlRegex, function(url) {
+        return '<a href="' + url + '" target="_blank">' + url + '</a>';
+    });
 }

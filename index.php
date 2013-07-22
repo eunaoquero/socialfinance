@@ -50,7 +50,7 @@
 	<div class="row-fluid">
 		<div class="span8 offset2">
 	    <form class="well form-search" id="mainQuery">
-	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Enter company name..." data-provide="typeahead">
+	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Enter stock symbol..." data-provide="typeahead">
 	      <button type="submit" class="btn btn-success" id="btnSearch"><i class="icon-search icon-white"></i> Go!</button>
           <button type="reset" class="btn" id="btnReset">Reset</button>
 	    </form>
