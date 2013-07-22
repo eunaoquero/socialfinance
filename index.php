@@ -13,7 +13,7 @@
 <!-- Additional CSS before responsive CSS kicks in -->
 <style type="text/css">
     body {
-        padding-top: 80px;
+        padding-top: 90px;
     }
 </style>
 <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
 </head>
 
-<body>
+<body id="top">
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
@@ -44,13 +44,13 @@
 
 <div class="container">
 	<div class="row-fluid">
-    	<div class="span9 offset2"><h3>Check your investments</h3></div>
+    	<div class="span8 offset2"><h3>Check your investments</h3></div>
     </div>
         
 	<div class="row-fluid">
 		<div class="span8 offset2">
 	    <form class="well form-search" id="mainQuery">
-	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Enter stock symbol..." data-provide="typeahead">
+	      <input type="text" class="input-large search-query" id="mainQueryInput" placeholder="Enter stock symbol..." data-provide="typeahead" autocomplete="off">
 	      <button type="submit" class="btn btn-success" id="btnSearch"><i class="icon-search icon-white"></i> Go!</button>
           <button type="reset" class="btn" id="btnReset">Reset</button>
 	    </form>
@@ -60,8 +60,22 @@
     <div class="row-fluid" id="resultsDiv">
 	
     </div>
-
 </div> <!-- container -->
+
+<div class="container">
+	<div class="navbar navbar-static-bottom">
+        <div class="row-fluid">
+    		<div class="span8 offset2">	
+                <hr>
+                <p class="pull-right"><a href="#top">Back to top</a></p>
+            	<p><small><strong>SocialFinance</strong> an MIST 7571 project</small><br/>
+                <small>Davis | Lord | Pacis | Silva</small><br/>
+                <a href="http://bootswatch.com/flatly/" target="_blank"><small>Flatly</small></a> <small>with</small> <a href="http://twitter.github.io/bootstrap/" target="_blank"><small>Bootstrap</small></a>
+                </p>
+			</div>
+		</div>
+	</div>
+</div>
 
 <div id="modalAbout" class="modal hide fade">
 	<div class="modal-header">

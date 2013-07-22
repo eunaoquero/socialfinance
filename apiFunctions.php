@@ -48,8 +48,8 @@ function twitter_search($token, $query){
 	$formed_url ='?q='.$q;
 	//limit search to lang English, US lower 48 geocode and exclude RTs
 	$formed_url = $formed_url.'+exclude:retweets&lang=en&geocode=39.8,-95.583068847656,2500km';
-	//search result_type mixed and count 8
-	$formed_url = $formed_url.'&result_type=mixed&count=8';
+	//search result_type mixed and count 30
+	$formed_url = $formed_url.'&result_type=mixed&count=30';
 	//include entities
 	$formed_url = $formed_url.'&include_entities=true'; 
 	$headers = array( 
