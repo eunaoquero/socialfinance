@@ -16,6 +16,12 @@ var resultListGlobal = [];
 //main js function
 $(document).ready(function(e) {
 	
+	if (localStorage.pageData) {
+		console.log("Getting html from local storage...");
+		var pageData = localStorage.getItem('pageData');
+		$('#resultListDivTweetCloud').show();
+		$('#resultsDiv').hide().html(pageData).fadeIn('slow');
+	}
 	//typeahead callback function
 	 YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
 		resultListGlobal = []; //reset global typeahead array
@@ -89,8 +95,11 @@ $(document).ready(function(e) {
   		//fade out results div
 		$('#resultsDiv').fadeOut('slow', function() {
 			$('#resultsDiv').html('');
-			$('#resultsDiv').show();
+			$('#resultsDiv').show();	
   		});
+		//clear local storage
+		console.log("Clearing local storage...");
+		localStorage.clear();
 	});
 	
 }); //end document ready
@@ -138,7 +147,7 @@ function queryTwitterAPI(query_text){
 		
 			$('#resultListDivTwitter').html('No related tweets found');
 		}
-	} //procesResults
+	} //processResults
 	
 	//twitter api error callback
 	function processError(){
@@ -165,7 +174,7 @@ function queryWordCloudAPI(tweet_string){
 		success: function(item){
 			//show tweet cloud image
 			$('#resultListDivTweetCloud').removeClass('well');
-			$('#resultListDivTweetCloud').hide().html('<img src="' + JSON.parse(item).url +'"/>').fadeIn('slow');	
+			$('#resultListDivTweetCloud').hide().html('<img src="' + JSON.parse(item).url +'"/>').fadeIn('slow', addLocalStorage);	
 		}
 	});
 	
@@ -181,3 +190,16 @@ function urlify(text, method) {
 			return ''; //return blank
     });
 } //urlify
+
+//function adds API data to local storage
+function addLocalStorage(){
+	console.log("Saving to local storage...");
+	var pageHTML = $('#resultsDiv').html();
+	
+	if(window.localStorage) {
+		localStorage.setItem('pageData', pageHTML);
+	} else {
+   		console.log('Local storage not supported');
+	}
+	
+}
