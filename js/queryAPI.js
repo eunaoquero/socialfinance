@@ -56,7 +56,7 @@ $(document).ready(function(e) {
         console.log('Form is being submitted...');
         var resultsDiv = $('#resultsDiv');
         var query_text = $('#mainQueryInput').val();
-        var resultDiv = '<div class="span4 offset2 fade" id="leftDiv"><h3 id="list"><img src="images/twitter-icon.png"/>Twitter Results</h3><div class="well" style="padding: 8px 0;" id="resultListDivTwitter"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div><div class="span4 fade" id="rightDiv"><h3 id="list"><img src="images/tweetcloud-icon.png"/>Tweet Cloud</h3><div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivTweetCloud"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div>';
+        var resultDiv = '<div class="span4 offset2 fade" id="leftDiv"><h3 id="list"><img src="images/twitter-icon.png"/>Twitter Results</h3><div class="well" style="padding: 8px 0;" id="resultListDivTwitter"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div><div class="span4 fade" id="rightDiv"><h3 id="list"><img src="images/tweetcloud-icon.png"/>Stock Info Cloud</h3><div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivTweetCloud"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div>';
 
         resultsDiv.html(''); //init results container div
 
@@ -150,7 +150,7 @@ function queryTwitterAPI(query_text){
 			listHTML += '</ul>';
 			$('#resultListDivTwitter').hide().html(listHTML).fadeIn('slow'); //show twitter list results
 			
-			queryWordCloudAPI(tweetCloudText.replace(new RegExp('\\' + query_text, 'g'), '')); //call word cloud API
+			queryWordCloudAPI(tweetCloudText.replace(new RegExp('\\' + query_text, 'g'), ''), query_text); //call word cloud API
 			
 		} else { //no tweets found
 		
@@ -166,9 +166,13 @@ function queryTwitterAPI(query_text){
 } //queryTwitterAPI
 
 //Calls the MakeWordCloud API
-function queryWordCloudAPI(tweet_string){
+function queryWordCloudAPI(tweet_string, query_text){
 	console.log('Getting tweet cloud...');
     var resultListDivTweetCloud = $('#resultListDivTweetCloud');
+
+    //clean query text
+    if (query_text.charAt(0) == '$')
+        query_text =  query_text.substr(1);
 
 	$.ajax({ 
 		type: "POST",
@@ -185,7 +189,7 @@ function queryWordCloudAPI(tweet_string){
 		success: function(item){
 			//show tweet cloud image
             resultListDivTweetCloud.removeClass('well');
-            resultListDivTweetCloud.hide().html('<img src="' + JSON.parse(item).url +'"/>').fadeIn('slow', addLocalStorage);
+            resultListDivTweetCloud.hide().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow', addLocalStorage);
 		}
 	});
 	

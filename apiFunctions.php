@@ -66,6 +66,3 @@ function twitter_search($token, $query){
 	curl_close($ch);
 	return $response;
 }
-
-
-?>

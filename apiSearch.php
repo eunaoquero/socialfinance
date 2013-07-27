@@ -19,5 +19,3 @@ if (isset($_GET['query_text']) && isset($_GET['query_action'])){
 	echo $query_response;
 
 }
-
-?>
