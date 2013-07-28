@@ -57,9 +57,13 @@
         </div>
 	</div>
     
-    <div class="row-fluid" id="resultsDiv">
-	
+    <div class="row-fluid" id="resultsDiv01">
     </div>
+    <div class="row-fluid" id="resultsDiv02">
+    </div>
+    <div class="row-fluid" id="resultsDiv03">
+    </div>	
+
 </div> <!-- container -->
 
 <div class="container">

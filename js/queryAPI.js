@@ -14,15 +14,39 @@ var YAHOO = {
 //Global variable for typeahead
 var resultListGlobal = [];
 
+//Global Indexes;
+var mainIndex = 1;
+var processIndex = 1;
+var cloudQueryIndex = 1;
+var cloudSaveIndex = 1;
+
+//Update Index
+function updateIndex(index){
+	if(index == 1){
+	return 2;
+
+	} else if(index == 2 ){
+	return 3;
+
+	} else if(index == 3 ){
+	return 1;
+	}
+}
 //main js function
 $(document).ready(function(e) {
 
     //store previous search in local storage
 	if (localStorage.pageData) {
 		console.log("Getting html from local storage...");
-		var pageData = localStorage.getItem('pageData');
-		$('#resultListDivTweetCloud').show();
-		$('#resultsDiv').hide().html(pageData).fadeIn('slow');
+		var pageData1= localStorage.getItem('pageData1');
+		var pageData2= localStorage.getItem('pageData2');
+		var pageData3= localStorage.getItem('pageData3');
+                $('#resultListDivTweetCloud1').show();
+                $('#resultListDivTweetCloud2').show();
+                $('#resultListDivTweetCloud3').show();
+                $('#resultsDiv01').hide().html(pageData1).fadeIn('slow');
+                $('#resultsDiv02').hide().html(pageData2).fadeIn('slow');
+                $('#resultsDiv03').hide().html(pageData3).fadeIn('slow');
 	}
 
     //input typeahead function
@@ -54,10 +78,26 @@ $(document).ready(function(e) {
     //submit event listener function
     $('#mainQuery').submit(function(e) {
         console.log('Form is being submitted...');
-        var resultsDiv = $('#resultsDiv');
-        var query_text = $('#mainQueryInput').val();
-        var resultDiv = '<div class="span4 offset2 fade" id="leftDiv"><h3 id="list"><img src="images/twitter-icon.png"/>Twitter Results</h3><div class="well" style="padding: 8px 0;" id="resultListDivTwitter"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div><div class="span4 fade" id="rightDiv"><h3 id="list"><img src="images/tweetcloud-icon.png"/>Stock Info Cloud</h3><div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivTweetCloud"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div>';
 
+
+
+        if(mainIndex == 1){
+        var resultsDiv = $('#resultsDiv01');
+
+        } else if(mainIndex == 2 ){
+        var resultsDiv = $('#resultsDiv02');
+
+        } else if(mainIndex == 3 ){
+        var resultsDiv = $('#resultsDiv03');
+        }
+
+
+
+
+
+        var query_text = $('#mainQueryInput').val();
+
+        var resultDiv = '<div class="span4 offset2 fade" id="leftDiv'+mainIndex+'"><h3 id="list"><img src="images/twitter-icon.png"/>Twitter Results</h3><div class="well" style="padding: 8px 0;" id="resultListDivTwitter'+mainIndex+'"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div><div class="span4 fade" id="rightDiv'+mainIndex+'"><h3 id="list"><img src="images/tweetcloud-icon.png"/>Stock Info Cloud</h3><div class="well pagination-centered" style="padding: 8px 0;" id="resultListDivTweetCloud'+mainIndex+'"><img style="display:block; margin:auto;" src="images/ajax-loader.gif"/></div></div>';
         resultsDiv.html(''); //init results container div
 
         //empty search alert message
@@ -65,8 +105,8 @@ $(document).ready(function(e) {
 
         //show container div
         resultsDiv.html(resultDiv);
-        $("#leftDiv").addClass("in");
-        $("#rightDiv").addClass("in");
+        $("#leftDiv"+mainIndex).addClass("in");
+        $("#rightDiv"+mainIndex).addClass("in");
 
         //search call
         if (query_text != '') {
@@ -82,19 +122,25 @@ $(document).ready(function(e) {
             $("#emptyAlert").addClass("in") //add fade in class
         }
 
+
+
+	//Update mainIndex
+        mainIndex = updateIndex(mainIndex);
+
         return false; //stop form normal execution
     });
 
     //add event listener to reset button
     $('#btnReset').click(function() {
-        var resultsDiv = $('#resultsDiv');
+	for (i = 1; i<=3 ; i++){
+        var resultsDiv = $("#resultsDiv"+i);
 
         //fade out results div
         resultsDiv.fadeOut('slow', function() {
             resultsDiv.html('');
             resultsDiv.show();
         });
-
+	}
         //clear local storage
         console.log("Clearing local storage...");
         localStorage.clear();
@@ -114,7 +160,7 @@ YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
 
 
 //queries the Twitter API through the PHP proxy
-function queryTwitterAPI(query_text){
+function queryTwitterAPI(query_text ){
 	console.log('Query twitter API...');
 	var listHTML = '';
 	var twitterAPI = "apiSearch.php";
@@ -148,14 +194,19 @@ function queryTwitterAPI(query_text){
 			});
 			
 			listHTML += '</ul>';
-			$('#resultListDivTwitter').hide().html(listHTML).fadeIn('slow'); //show twitter list results
+			$("#resultListDivTwitter"+processIndex).hide().html(listHTML).fadeIn('slow'); //show twitter list results
 			
 			queryWordCloudAPI(tweetCloudText.replace(new RegExp('\\' + query_text, 'g'), ''), query_text); //call word cloud API
 			
 		} else { //no tweets found
 		
-			$('#resultListDivTwitter').html('No related tweets found');
+			$('#resultListDivTwitter'+processIndex).html('No related tweets found');
 		}
+
+
+		//Update Process Index
+        	processIndex = updateIndex(processIndex);
+
 	} //processResults
 	
 	//twitter api error callback
@@ -168,7 +219,7 @@ function queryTwitterAPI(query_text){
 //Calls the MakeWordCloud API
 function queryWordCloudAPI(tweet_string, query_text){
 	console.log('Getting tweet cloud...');
-    var resultListDivTweetCloud = $('#resultListDivTweetCloud');
+    var resultListDivTweetCloud = $("#resultListDivTweetCloud"+cloudQueryIndex);
 
     //clean query text
     if (query_text.charAt(0) == '$')
@@ -192,7 +243,10 @@ function queryWordCloudAPI(tweet_string, query_text){
             resultListDivTweetCloud.hide().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow', addLocalStorage);
 		}
 	});
-	
+
+	//update query cloud index
+        cloudQueryIndex = updateIndex(cloudQueryIndex);
+
 }
 
 //detects links in tweet text using regex
@@ -209,11 +263,16 @@ function urlify(text, method) {
 //function adds API data to local storage
 function addLocalStorage(){
 	console.log("Saving to local storage...");
-	var pageHTML = $('#resultsDiv').html();
+	var pageHTML = $("#resultsDiv0"+cloudSaveIndex).html();
 	
 	if(window.localStorage) {
-		localStorage.setItem('pageData', pageHTML);
+		localStorage.setItem("pageData"+cloudSaveIndex, pageHTML);
 	} else {
    		console.log('Local storage not supported');
 	}
+
+
+	//update Cloud Index
+        cloudSaveIndex = updateIndex(cloudSaveIndex);
+
 } //addLocalStorage
