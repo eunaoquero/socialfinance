@@ -133,7 +133,7 @@ $(document).ready(function(e) {
     //add event listener to reset button
     $('#btnReset').click(function() {
 	for (i = 1; i<=3 ; i++){
-        var resultsDiv = $("#resultsDiv"+i);
+        var resultsDiv = $("#resultsDiv0"+i);
 
         //fade out results div
         resultsDiv.fadeOut('slow', function() {
