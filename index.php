@@ -56,13 +56,25 @@
 	    </form>
         </div>
 	</div>
-    
-    <div class="row-fluid" id="resultsDiv01">
+
+    <div class="row-fluid">
+        <div class="span8 offset2" id="errorHolder"></div>
     </div>
-    <div class="row-fluid" id="resultsDiv02">
+
+    <div class="row-fluid">
+        <div class="span8 offset2" id="stockTabsHolder" style="display:none">
+            <ul class="nav nav-tabs" id="stockTabs" data-tabs="tabs"></ul>
+        </div>
     </div>
-    <div class="row-fluid" id="resultsDiv03">
-    </div>	
+
+    <div class="tab-content">
+        <div class="row-fluid tab-pane" id="resultsDiv01">
+        </div>
+        <div class="row-fluid tab-pane" id="resultsDiv02">
+        </div>
+        <div class="row-fluid tab-pane" id="resultsDiv03">
+        </div>
+    </div>
 
 </div> <!-- container -->
 
