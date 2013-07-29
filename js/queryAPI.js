@@ -89,21 +89,20 @@ $(document).ready(function(e) {
         e.preventDefault();
 
         var query_text = $('#mainQueryInput').val();
-        var stockTabs = $('#stockTabs');
         var stockTabsHolder = $('#stockTabsHolder');
+        var stockTabs = $('#stockTabs');
 
         //search call
         if (query_text != '') {
 
             console.log("StockTabs: " + stockTabsHolder.length);
-
             stockTabsHolder.fadeIn('slow');//show ul for tabs
 
             if(mainIndex == 1){
                 var resultsDiv = $('#resultsDiv01');
                 $('#listOne').remove();
                 stockTabs.append('<li id="listOne" class="active"><a href="#resultsDiv01" data-toggle="tab">'+ query_text +'</a></li>');
-                $('#resultsDiv01').addClass("active");
+                resultsDiv.addClass("active");
                 $('#resultsDiv02').removeClass("active");
                 $('#resultsDiv03').removeClass("active");
                 $('#listTwo').removeClass("active");
@@ -113,7 +112,7 @@ $(document).ready(function(e) {
                 var resultsDiv = $('#resultsDiv02');
                 $('#listTwo').remove();
                 stockTabs.append('<li id="listTwo" class="active"><a href="#resultsDiv02" data-toggle="tab">'+ query_text +'</a></li>');
-                $('#resultsDiv02').addClass("active");
+                resultsDiv.addClass("active");
                 $('#resultsDiv01').removeClass("active");
                 $('#resultsDiv03').removeClass("active");
                 $('#listOne').removeClass("active");
@@ -123,7 +122,7 @@ $(document).ready(function(e) {
                 var resultsDiv = $('#resultsDiv03');
                 $('#listThree').remove();
                 stockTabs.append('<li id="listThree" class="active"><a href="#resultsDiv03" data-toggle="tab">'+ query_text +'</a></li>');
-                $('#resultsDiv03').addClass("active");
+                resultsDiv.addClass("active");
                 $('#resultsDiv01').removeClass("active");
                 $('#resultsDiv02').removeClass("active");
                 $('#listOne').removeClass("active");
@@ -276,7 +275,7 @@ function queryWordCloudAPI(tweet_string, query_text){
 		success: function(item){
 			//show tweet cloud image
             resultListDivTweetCloud.removeClass('well');
-            resultListDivTweetCloud.hide().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow')//addLocalStorage;
+            resultListDivTweetCloud.hide().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow')//addLocalStorage here as a fadein callback;
 		}
 	});
 
