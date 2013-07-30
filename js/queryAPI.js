@@ -44,7 +44,11 @@ $(document).ready(function(e) {
 		var pageData1= localStorage.getItem('pageData1');
 		var pageData2= localStorage.getItem('pageData2');
 		var pageData3= localStorage.getItem('pageData3');
-
+		
+		mainIndex = localStorage.getItem('pageIndex');
+		processIndex = localStorage.getItem('pageIndex');
+		cloudQueryIndex = localStorage.getItem('pageIndex');
+		cloudSaveIndex = localStorage.getItem('pageIndex');
         stockTabsHolder.html(tabData).fadeIn('slow');//show ul for tabs
 
 
@@ -312,6 +316,7 @@ function addLocalStorage(){
 	if(window.localStorage) {
         localStorage.setItem("tabData", stockTabsHolder);
 		localStorage.setItem("pageData"+cloudSaveIndex, pageHTML);
+		localStorage.setItem("pageIndex",mainIndex);
 	} else {
    		console.log('Local storage not supported');
 	}
