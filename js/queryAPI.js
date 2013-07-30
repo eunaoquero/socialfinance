@@ -47,12 +47,20 @@ $(document).ready(function(e) {
 
         stockTabsHolder.html(tabData).fadeIn('slow');//show ul for tabs
 
+
         $('#resultListDivTweetCloud1').show();
         $('#resultListDivTweetCloud2').show();
         $('#resultListDivTweetCloud3').show();
         $('#resultsDiv01').hide().html(pageData1).fadeIn('slow');
         $('#resultsDiv02').hide().html(pageData2).fadeIn('slow');
         $('#resultsDiv03').hide().html(pageData3).fadeIn('slow');
+
+        $("#resultsDiv01").css("display","");
+        $("#resultsDiv02").css("display","");
+        $("#resultsDiv03").css("display","");
+
+        $("#resultsDiv01").addClass("active");
+	
 	}
 
     //input typeahead function
@@ -181,7 +189,7 @@ $(document).ready(function(e) {
         localStorage.clear();
 
     }); //btnReset click
-	
+
 }) //end document ready
 
 //typeahead callback function
@@ -203,7 +211,7 @@ function queryTwitterAPI(query_text ){
 		query_text: query_text,
 		query_action: 'twitter'
 	}
-	
+
 	$.getJSON(twitterAPI,twitterQuery,processResults).fail(processError); //call twitter api
 
 	//twitter api success callback
@@ -217,7 +225,7 @@ function queryTwitterAPI(query_text ){
 			var tweetDate;
 			listHTML = '<ul class="nav nav-list" id="resultList">';
 			listHTML += '<li class="nav-header">'+ query_text +' - Related Tweets</li>';
-	
+
 			//loop through tweets for twitter list, get all 20 tweets for tweetCloudText
 			$.each(data.statuses, function(result, tweet) {
 				if (result < resultLimit) {
@@ -227,14 +235,14 @@ function queryTwitterAPI(query_text ){
 				} else
 					tweetCloudText += urlify(tweet.text, "");
 			});
-			
+
 			listHTML += '</ul>';
 			$("#resultListDivTwitter"+processIndex).hide().html(listHTML).fadeIn('slow'); //show twitter list results
-			
+
 			queryWordCloudAPI(tweetCloudText.replace(new RegExp('\\' + query_text, 'g'), ''), query_text); //call word cloud API
-			
+
 		} else { //no tweets found
-		
+
 			$('#resultListDivTwitter'+processIndex).html('No related tweets found');
 		}
 
@@ -243,12 +251,12 @@ function queryTwitterAPI(query_text ){
         	processIndex = updateIndex(processIndex);
 
 	} //processResults
-	
+
 	//twitter api error callback
 	function processError(){
 		console.log('Error connecting to twitter API!');	
 	}//processError
-	
+
 } //queryTwitterAPI
 
 //Calls the MakeWordCloud API
@@ -275,7 +283,7 @@ function queryWordCloudAPI(tweet_string, query_text){
 		success: function(item){
 			//show tweet cloud image
             resultListDivTweetCloud.removeClass('well');
-            resultListDivTweetCloud.hide().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow')//addLocalStorage here as a fadein callback;
+            resultListDivTweetCloud.hide().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow', addLocalStorage)//addLocalStorage here as a fadein callback;
 		}
 	});
 
@@ -300,7 +308,7 @@ function addLocalStorage(){
 	console.log("Saving to local storage...");
     var stockTabsHolder = $('#stockTabsHolder').html();
 	var pageHTML = $("#resultsDiv0"+cloudSaveIndex).html();
-	
+
 	if(window.localStorage) {
         localStorage.setItem("tabData", stockTabsHolder);
 		localStorage.setItem("pageData"+cloudSaveIndex, pageHTML);
