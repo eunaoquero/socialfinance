@@ -68,12 +68,14 @@
         </div>
     </div>
 
-    <div class="tab-content">
-        <div class="row-fluid tab-pane" id="resultsDiv01">
-        </div>
-        <div class="row-fluid tab-pane" id="resultsDiv02">
-        </div>
-        <div class="row-fluid tab-pane" id="resultsDiv03">
+    <div class="row-fluid">
+        <div class="tab-content" id="resultsHolder">
+            <div class="row-fluid tab-pane" id="resultsDiv01">
+            </div>
+            <div class="row-fluid tab-pane" id="resultsDiv02">
+            </div>
+            <div class="row-fluid tab-pane" id="resultsDiv03">
+            </div>
         </div>
     </div>
 

@@ -35,35 +35,45 @@ function updateIndex(index){
 //main js function
 $(document).ready(function(e) {
 
-    //store previous search in local storage
+    //retrieve data from local storage if available
 	if (localStorage.pageData1 || localStorage.pageData2 || localStorage.pageData3) {
         var stockTabsHolder = $('#stockTabsHolder');
 
+        //retrieve html data from local storage
 		console.log("Getting html from local storage...");
         var tabData= localStorage.getItem('tabData');
 		var pageData1= localStorage.getItem('pageData1');
 		var pageData2= localStorage.getItem('pageData2');
 		var pageData3= localStorage.getItem('pageData3');
-		
+        var resultsDiv01 = $('#resultsDiv01');
+        var resultsDiv02 = $('#resultsDiv02');
+        var resultsDiv03 = $('#resultsDiv03');
+
+        //retrieve indexes from local storage
 		mainIndex = localStorage.getItem('pageIndex');
 		processIndex = localStorage.getItem('pageIndex');
 		cloudQueryIndex = localStorage.getItem('pageIndex');
 		cloudSaveIndex = localStorage.getItem('pageIndex');
+
+        //display data saved if available
         stockTabsHolder.html(tabData).fadeIn('slow');//show ul for tabs
-
-
         $('#resultListDivTweetCloud1').show();
         $('#resultListDivTweetCloud2').show();
         $('#resultListDivTweetCloud3').show();
-        $('#resultsDiv01').hide().html(pageData1).fadeIn('slow');
-        $('#resultsDiv02').hide().html(pageData2).fadeIn('slow');
-        $('#resultsDiv03').hide().html(pageData3).fadeIn('slow');
+        resultsDiv01.hide().empty().html(pageData1).fadeIn('slow');
+        resultsDiv02.hide().empty().html(pageData2).fadeIn('slow');
+        resultsDiv03.hide().empty().html(pageData3).fadeIn('slow');
 
-        $("#resultsDiv01").css("display","");
-        $("#resultsDiv02").css("display","");
-        $("#resultsDiv03").css("display","");
+        //reset display that has been hidden
+        resultsDiv01.css("display","");
+        resultsDiv02.css("display","");
+        resultsDiv02.css("display","");
+        resultsDiv01.addClass("active"); //activate first tab
+        $('#listOne').addClass("active");
+        $('#listTwo').removeClass("active");
+        $('#listThree').removeClass("active");
 
-        $("#resultsDiv01").addClass("active");
+        console.log($('body').html())
 	
 	}
 
@@ -98,7 +108,7 @@ $(document).ready(function(e) {
         console.log('Form is being submitted...');
         console.log(mainIndex);
 
-        e.preventDefault();
+        e.preventDefault(); //prevent form normal execution
 
         var query_text = $('#mainQueryInput').val();
         var stockTabsHolder = $('#stockTabsHolder');
@@ -110,6 +120,7 @@ $(document).ready(function(e) {
             console.log("StockTabs: " + stockTabsHolder.length);
             stockTabsHolder.fadeIn('slow');//show ul for tabs
 
+            //display tabbed results
             if(mainIndex == 1){
                 var resultsDiv = $('#resultsDiv01');
                 $('#listOne').remove();
@@ -169,30 +180,36 @@ $(document).ready(function(e) {
 
         } //end check for empty input
 
-        return false; //stop form normal execution
-    });
+        return false;
+    }); //end mainQuery submit
 
     //add event listener to reset button
     $('#btnReset').click(function() {
 
-        $('#stockTabs').empty(); //clear tabs
-        $('#stockTabsHolder').hide(); //hide tab holder
+        $('#resultsHolder').fadeOut('slow', function() {
+            $('#stockTabs').empty(); //clear tabs
+            $('#stockTabsHolder').hide(); //hide tab holder
+
+            for (i = 1; i<=3 ; i++){
+                var resultsDiv = $("#resultsDiv0"+i);
+                resultsDiv.empty();
+            }
+
+            $('#resultsHolder').show();
+
+        }); //hide results then empty
+
         //reset global indexes
         mainIndex = 1;
         processIndex = 1;
         cloudQueryIndex = 1;
         cloudSaveIndex = 1;
 
-        for (i = 1; i<=3 ; i++){
-           var resultsDiv = $("#resultsDiv0"+i);
-            resultsDiv.empty();
-        }
-
         //clear local storage
         console.log("Clearing local storage...");
         localStorage.clear();
 
-    }); //btnReset click
+    }); //end btnReset click
 
 }) //end document ready
 
@@ -203,8 +220,7 @@ YAHOO.Finance.SymbolSuggest.ssCallback = function (data) {
         resultListGlobal.push(JSON.stringify({ name: value.name, value: value.symbol}));
     });
     return resultListGlobal;
-} //YAHOO.Finance.SymbolSuggest.ssCallback
-
+} //end YAHOO.Finance.SymbolSuggest.ssCallback
 
 //queries the Twitter API through the PHP proxy
 function queryTwitterAPI(query_text ){
@@ -241,7 +257,7 @@ function queryTwitterAPI(query_text ){
 			});
 
 			listHTML += '</ul>';
-			$("#resultListDivTwitter"+processIndex).hide().html(listHTML).fadeIn('slow'); //show twitter list results
+			$("#resultListDivTwitter"+processIndex).hide().empty().html(listHTML).fadeIn('slow'); //show twitter list results
 
 			queryWordCloudAPI(tweetCloudText.replace(new RegExp('\\' + query_text, 'g'), ''), query_text); //call word cloud API
 
@@ -250,9 +266,8 @@ function queryTwitterAPI(query_text ){
 			$('#resultListDivTwitter'+processIndex).html('No related tweets found');
 		}
 
-
 		//Update Process Index
-        	processIndex = updateIndex(processIndex);
+        processIndex = updateIndex(processIndex);
 
 	} //processResults
 
@@ -261,7 +276,7 @@ function queryTwitterAPI(query_text ){
 		console.log('Error connecting to twitter API!');	
 	}//processError
 
-} //queryTwitterAPI
+} //end queryTwitterAPI
 
 //Calls the MakeWordCloud API
 function queryWordCloudAPI(tweet_string, query_text){
@@ -287,14 +302,14 @@ function queryWordCloudAPI(tweet_string, query_text){
 		success: function(item){
 			//show tweet cloud image
             resultListDivTweetCloud.removeClass('well');
-            resultListDivTweetCloud.hide().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow', addLocalStorage)//addLocalStorage here as a fadein callback;
+            resultListDivTweetCloud.hide().empty().html('<img src="'+ 'http://chart.finance.yahoo.com/z?s='+ query_text +'&t=6m&q=l&l=on&z=s&p=m50,m200' +'" /><br /><img src="' + JSON.parse(item).url +'"/>').fadeIn('slow', addLocalStorage)//addLocalStorage here as a fadein callback;
 		}
 	});
 
 	//update query cloud index
-        cloudQueryIndex = updateIndex(cloudQueryIndex);
+    cloudQueryIndex = updateIndex(cloudQueryIndex);
 
-}
+} //end queryCloudAPI
 
 //detects links in tweet text using regex
 function urlify(text, method) {
@@ -305,7 +320,7 @@ function urlify(text, method) {
 		else 
 			return ''; //return blank
     });
-} //urlify
+} //end urlify
 
 //function adds API data to local storage
 function addLocalStorage(){
@@ -322,6 +337,6 @@ function addLocalStorage(){
 	}
 
 	//update Cloud Index
-        cloudSaveIndex = updateIndex(cloudSaveIndex);
+    cloudSaveIndex = updateIndex(cloudSaveIndex);
 
-} //addLocalStorage
+} //end addLocalStorage
