@@ -39,41 +39,33 @@ $(document).ready(function(e) {
 	if (localStorage.pageData1 || localStorage.pageData2 || localStorage.pageData3) {
         var stockTabsHolder = $('#stockTabsHolder');
 
-        //retrieve html data from local storage
-		console.log("Getting html from local storage...");
+        //retrieve result data from local storage
+        console.log("Getting html from local storage...");
         var tabData= localStorage.getItem('tabData');
-		var pageData1= localStorage.getItem('pageData1');
-		var pageData2= localStorage.getItem('pageData2');
-		var pageData3= localStorage.getItem('pageData3');
-        var resultsDiv01 = $('#resultsDiv01');
-        var resultsDiv02 = $('#resultsDiv02');
-        var resultsDiv03 = $('#resultsDiv03');
+        var pageData1= localStorage.getItem('pageData1');
+        var pageData2= localStorage.getItem('pageData2');
+        var pageData3= localStorage.getItem('pageData3');
 
-        //retrieve indexes from local storage
-		mainIndex = localStorage.getItem('pageIndex');
-		processIndex = localStorage.getItem('pageIndex');
-		cloudQueryIndex = localStorage.getItem('pageIndex');
-		cloudSaveIndex = localStorage.getItem('pageIndex');
-
-        //display data saved if available
+        //retrieve index data from local storage
+        mainIndex = localStorage.getItem('pageIndex');
+        processIndex = localStorage.getItem('pageIndex');
+        cloudQueryIndex = localStorage.getItem('pageIndex');
+        cloudSaveIndex = localStorage.getItem('pageIndex');
         stockTabsHolder.html(tabData).fadeIn('slow');//show ul for tabs
+
+        //start building page from local storage data
         $('#resultListDivTweetCloud1').show();
         $('#resultListDivTweetCloud2').show();
         $('#resultListDivTweetCloud3').show();
-        resultsDiv01.hide().empty().html(pageData1).fadeIn('slow');
-        resultsDiv02.hide().empty().html(pageData2).fadeIn('slow');
-        resultsDiv03.hide().empty().html(pageData3).fadeIn('slow');
+        $('#resultsDiv01').hide().html(pageData1).fadeIn('slow');
+        $('#resultsDiv02').hide().html(pageData2).fadeIn('slow');
+        $('#resultsDiv03').hide().html(pageData3).fadeIn('slow');
 
-        //reset display that has been hidden
-        resultsDiv01.css("display","");
-        resultsDiv02.css("display","");
-        resultsDiv02.css("display","");
-        resultsDiv01.addClass("active"); //activate first tab
-        $('#listOne').addClass("active");
-        $('#listTwo').removeClass("active");
-        $('#listThree').removeClass("active");
+        $("#resultsDiv01").css("display","");
+        $("#resultsDiv02").css("display","");
+        $("#resultsDiv03").css("display","");
 
-        console.log($('body').html())
+        $("#resultsDiv01").addClass("active");
 	
 	}
 
